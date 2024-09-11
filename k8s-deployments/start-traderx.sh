@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directory containing the manifests
-MANIFEST_DIR="./traderx-k8s-manifests"
+MANIFEST_DIR="./k8s-deployments"
 
 # Array of directories to apply YAML files from in specific order
 DIRS_TO_APPLY=(
@@ -14,7 +14,7 @@ DIRS_TO_APPLY=(
     "70-trade-processor"   # Start the trade processor
     "80-trade-service"     # Start the Trade Service
     "90-frontend"          # Start the Front end
-    "100-ingress"          # Enable ingress last
+    "100-ingress-loadgen"          # Enable ingress last
 )
 
 # Loop through each directory in the specified order
