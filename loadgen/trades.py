@@ -35,6 +35,6 @@ while True:
     data = {"quantity":random.randint(1,1000),"accountId":random.choice(account_ids),"side":random.choice(side),"security":random.choice(security)}
 
 
-    response = requests.post('http://localhost:18092/trade/', headers=headers, json=data)
+    response = requests.post('http:/trade-service.default.svc.cluster.local:18092/trade/', headers=headers, json=data)
     print(response.text)
     time.sleep(1)
