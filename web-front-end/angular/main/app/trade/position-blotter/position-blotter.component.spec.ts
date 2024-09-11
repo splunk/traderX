@@ -41,8 +41,8 @@ describe('PositionBlotterComponent', () => {
   });
 
   it('should show given positions in the grid', async () => {
-    const columns = fixture.nativeElement.querySelectorAll('.ag-header-cell');
-    const rows = fixture.nativeElement.querySelectorAll('.ag-center-cols-container .ag-row');
+    const columns = fixture.nativeElement.querySelectorAll('#agGridpositions.ag-header-cell');
+    const rows = fixture.nativeElement.querySelectorAll('#agGridpositions.ag-center-cols-container .ag-row');
     expect(columns.length).toEqual(2);
     expect(rows.length).toEqual(2);
     const firstRow = rows[0];
