@@ -19,6 +19,7 @@
                 <app-trade-ticket [stocks]="stocks" [account]="accountModel" (create)="createTradeTicket($event)" (cancel)="closeTicket()">
                 </app-trade-ticket>
             </ng-template>
+            <!--
             <alert
                 *ngIf="createTicketResponse"
                 [type]="createTicketResponse.success ? 'success' : 'danger'"
@@ -28,6 +29,7 @@
             >
                 {{ createTicketResponse | json }}</alert
             >
+            -->
         </div>
     </div>
 
