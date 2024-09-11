@@ -18,7 +18,7 @@ spec:
         io.kompose.service: ingress
     spec:
       containers:
-        - image: quay.io/phagen/traderx/nginx-traderx:0.1
+        - image: quay.io/phagen/traderx/ingress-service:0.1
           imagePullPolicy: Always
           name: ingress
           ports:
