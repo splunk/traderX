@@ -29,7 +29,11 @@ export class TradeBlotterComponent implements OnChanges, OnDestroy {
         },
         {
             headerName: 'SIDE',
-            field: 'side'
+            field: 'side',
+            cellClassRules: {
+                'text-danger': 'x === "Sell"',
+                'text-success': 'x === "Buy"'
+            }
         },
         {
             headerName: 'STATE',
