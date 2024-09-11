@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    io.kompose.service: loadgen
+  name: loadgen
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: loadgen
+  template:
+    metadata:
+      labels:
+        io.kompose.service: loadgen
+    spec:
+      containers:
+        - image: quay.io/phagen/traderx/loadgen-service:0.1
+          imagePullPolicy: Always
+      restartPolicy: Always
