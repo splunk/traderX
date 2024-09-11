@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    io.kompose.service: trade-feed
+  name: trade-feed
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: trade-feed
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-nodejs: "default/splunk-otel-collector"
+      labels:
+        io.kompose.service: trade-feed
+    spec:
+      containers:
+        - args:
+            - npm
+            - run
+            - start
+          image: quay.io/phagen/traderx/trade-feed:0.1
+          imagePullPolicy: Always
+          name: trade-feed
+          ports:
+            - containerPort: 18086
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /workspace
+              name: trade-feed-cm
+          workingDir: /trade-feed
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            name: trade-feed-cm
+          name: trade-feed-cm
