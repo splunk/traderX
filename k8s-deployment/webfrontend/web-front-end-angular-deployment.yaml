@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  labels:
+    io.kompose.service: web-front-end-angular
+  name: web-front-end-angular
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: web-front-end-angular
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        instrumentation.opentelemetry.io/inject-nodejs: "default/splunk-otel-collector"
+      labels:
+        io.kompose.service: web-front-end-angular
+    spec:
+      containers:
+        - args:
+            - npm
+            - run
+            - start
+          image: quay.io/phagen/traderx/web-front-angular:0.1
+          imagePullPolicy: Always
+          name: web-front-end-angular
+          ports:
+            - containerPort: 18093
+              protocol: TCP
+          volumeMounts:
+            - mountPath: /workspace
+              name: web-front-end-angular-cm
+          workingDir: /web-front-end/angular
+      restartPolicy: Always
+      volumes:
+        - configMap:
+            name: web-front-end-angular-cm
+          name: web-front-end-angular-cm
