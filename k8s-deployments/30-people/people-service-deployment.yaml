@@ -25,7 +25,7 @@ spec:
             - /PeopleService.WebApi
             - dotnet
             - run
-          image: quay.io/phagen/traderx/people-service:0.1
+          image: quay.io/phagen/traderx/people-service:0.2
           imagePullPolicy: Always
           name: people-service
           ports:

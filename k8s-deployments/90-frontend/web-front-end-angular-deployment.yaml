@@ -24,7 +24,7 @@ spec:
             - npm
             - run
             - start
-          image: quay.io/phagen/traderx/web-front-angular:0.2
+          image: quay.io/phagen/traderx/web-front-angular:0.2.1
           imagePullPolicy: Always
           name: web-front-end-angular
           ports:
