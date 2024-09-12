@@ -16,9 +16,24 @@ spec:
         io.kompose.service: ingress
     spec:
       containers:
-        - image:  quay.io/phagen/traderx/ingress-service:0.1
+        - image:  quay.io/phagen/traderx/ingress-service:0.1.1
           imagePullPolicy: Always
           name: ingress
+          env:
+            - name: NGINX_HOST
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_TRACES_EXPORTER
+              value: "otlp"
+            - name:  OTEL_EXPORTER_OTLP_PROTOCOL
+              value: "grpc"
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://$(NODE_IP):4317"
+            - name: OTEL_SERVICE_NAME
+              value: "nginx"
+            - name: OTEL_PROPAGATORS
+              value: "tracecontext,b3,baggage"      
           ports:
             - containerPort: 8080
               protocol: TCP

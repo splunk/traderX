@@ -1,4 +1,4 @@
-FROM nginx
+FROM nginx:1.27.1-otel
 
 EXPOSE 8080
 ARG NGINX_HOST="localhost"
