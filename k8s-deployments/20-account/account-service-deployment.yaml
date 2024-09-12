@@ -36,13 +36,6 @@ spec:
             - mountPath: /workspace
               name: account-service-cm
           workingDir: /account-service
-          resources:
-            requests:
-              memory: "768Mi"
-              cpu: "0.5"
-            limits:
-              memory: "1024Mi"
-              cpu: "1"
       restartPolicy: Always
       volumes:
         - configMap:

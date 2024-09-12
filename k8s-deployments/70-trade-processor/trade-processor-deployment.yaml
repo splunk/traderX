@@ -38,13 +38,6 @@ spec:
             - mountPath: /workspace
               name: trade-processor-cm
           workingDir: /trade-processor
-          resources:
-            requests:
-              memory: "1024Mi"
-              cpu: "0.5"
-            limits:
-              memory: "1280Mi"
-              cpu: "1"
       restartPolicy: Always
       volumes:
         - configMap:

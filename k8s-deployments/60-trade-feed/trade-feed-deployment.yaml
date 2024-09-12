@@ -34,13 +34,6 @@ spec:
             - mountPath: /workspace
               name: trade-feed-cm
           workingDir: /trade-feed
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "125m"
-            limits:
-              memory: "512Mi"
-              cpu: "250m"
       restartPolicy: Always
       volumes:
         - configMap:

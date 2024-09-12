@@ -28,8 +28,9 @@ http {
     #gzip  on;
     otel_service_name nginx;
     otel_exporter {
-           endpoint splunk-otel-collector-agent.default.svc.cluster.local:4317;
-        }
+           #endpoint splunk-otel-collector-agent:4317;
+        endpoint 198.19.249.134:4317;
+    }
 
     include /etc/nginx/conf.d/*.conf;
 }
