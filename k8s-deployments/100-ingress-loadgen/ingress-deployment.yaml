@@ -20,10 +20,12 @@ spec:
           imagePullPolicy: Always
           name: ingress
           env:
-            - name: NGINX_HOST
+            - name: NODE_IP
               valueFrom:
                 fieldRef:
                   fieldPath: status.hostIP
+            - name: NGINX_HOST
+              value: "$(NODE_IP)"      
             - name: OTEL_TRACES_EXPORTER
               value: "otlp"
             - name:  OTEL_EXPORTER_OTLP_PROTOCOL
