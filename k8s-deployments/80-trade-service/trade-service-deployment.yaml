@@ -46,11 +46,11 @@ spec:
           workingDir: /trade-service
           resources:
             requests:
-              memory: "600Mi"
-              cpu: "256m"
-            limits:
               memory: "768Mi"
-              cpu: "512m"
+              cpu: "0.5"
+            limits:
+              memory: "1024Mi"
+              cpu: "1"
       restartPolicy: Always
       volumes:
         - configMap:

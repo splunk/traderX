@@ -41,10 +41,10 @@ spec:
           resources:
             requests:
               memory: "768Mi"
-              cpu: "256m"
+              cpu: "0.5"
             limits:
               memory: "1024Mi"
-              cpu: "512m"
+              cpu: "1"
       restartPolicy: Always
       volumes:
         - configMap:
