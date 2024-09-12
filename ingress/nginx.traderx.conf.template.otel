@@ -3,7 +3,7 @@ load_module /path/to/otel_ngx_module.so;
 
 
     otel_exporter {
-        endpoint    localhost:4317;
+        endpoint    .default.svc.cluster.local;:4317;
         interval    5s;
         batch_size  512;
         batch_count 4;
