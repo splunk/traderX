@@ -42,7 +42,7 @@ spec:
           workingDir: /ingress
           resources:
             requests:
-              memory: "5120Mi"
+              memory: "512Mi"
               cpu: "0.5"
             limits:
               memory: "1024Mi"
