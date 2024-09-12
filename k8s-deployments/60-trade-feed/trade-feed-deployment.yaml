@@ -36,10 +36,10 @@ spec:
           workingDir: /trade-feed
           resources:
             requests:
-              memory: "100Mi"
+              memory: "256Mi"
               cpu: "125m"
             limits:
-              memory: "256Mi"
+              memory: "512Mi"
               cpu: "250m"
       restartPolicy: Always
       volumes:
