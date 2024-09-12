@@ -36,11 +36,11 @@ spec:
           workingDir: /web-front-end/angular
           resources:
             requests:
-              memory: "256Mi"
-              cpu: "125m"
+              memory: "600Mi"
+              cpu: "256m"
             limits:
-              memory: "512Mi"
-              cpu: "250m"
+              memory: "768Mi"
+              cpu: "512m"
       restartPolicy: Always
       volumes:
         - configMap:

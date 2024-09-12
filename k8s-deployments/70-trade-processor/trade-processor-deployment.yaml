@@ -40,11 +40,11 @@ spec:
           workingDir: /trade-processor
           resources:
             requests:
-              memory: "600Mi"
-              cpu: "125m"
-            limits:
               memory: "768Mi"
-              cpu: "250m"
+              cpu: "256m"
+            limits:
+              memory: "1024Mi"
+              cpu: "512m"
       restartPolicy: Always
       volumes:
         - configMap:
