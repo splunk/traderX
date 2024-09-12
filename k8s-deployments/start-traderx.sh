@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Directory containing the manifests
-MANIFEST_DIR="./"
+MANIFEST_DIR="./k8s-deployments"
 
 # Array of directories to apply YAML files from in specific order
 DIRS_TO_APPLY=(

@@ -18,36 +18,36 @@
             otel_trace_context propagate;
             proxy_pass http://web-front-end-angular:18093/ng-cli-ws;
             proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Upgrade ${DOLLAR}http_upgrade;
             proxy_set_header Connection "upgrade";
         }
-
+        
         location /trade-feed/  {
             otel_trace on;
             otel_trace_context propagate;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-For ${DOLLAR}proxy_add_x_forwarded_for;
+            proxy_set_header Host ${DOLLAR}http_host;
 
             proxy_pass http://trade-feed:18086/;
 
             proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Upgrade ${DOLLAR}http_upgrade;
             proxy_set_header Connection "upgrade";
-
+      
         }
 
     location /socket.io/ {
             otel_trace on;
             otel_trace_context propagate;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header Host $http_host;
+            proxy_set_header X-Forwarded-For ${DOLLAR}proxy_add_x_forwarded_for;
+            proxy_set_header Host ${DOLLAR}http_host;
 
             proxy_pass http://trade-feed:18086/socket.io/;
 
             proxy_http_version 1.1;
-            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Upgrade ${DOLLAR}http_upgrade;
             proxy_set_header Connection "upgrade";
-
+      
         }
 
         location /people-service/ {
@@ -57,17 +57,17 @@
         }
         location /account-service/ {
             otel_trace on;
-            otel_trace_context propagate;
+            otel_trace_context propagate;            
             proxy_pass http://account-service:18088/;
         }
         location /position-service/ {
             otel_trace on;
-            otel_trace_context propagate;
+            otel_trace_context propagate;            
             proxy_pass http://position-service:18090/;
         }
         location /trade-service/ {
             otel_trace on;
-            otel_trace_context propagate;
+            otel_trace_context propagate;            
             proxy_pass http://trade-service:18092/;
         }
         location /trade-processor/ {
