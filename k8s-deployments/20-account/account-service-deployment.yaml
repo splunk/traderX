@@ -38,10 +38,10 @@ spec:
           workingDir: /account-service
           resources:
             requests:
-              memory: "600Mi"
+              memory: "768Mi"
               cpu: "256m"
             limits:
-              memory: "768Mi"
+              memory: "1024Mi"
               cpu: "512m"
       restartPolicy: Always
       volumes:
