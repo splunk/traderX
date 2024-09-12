@@ -15,7 +15,14 @@ spec:
         io.kompose.service: loadgen
     spec:
       containers:
-        - image: quay.io/phagen/traderx/loadgen-service:0.1
+        - name: loadgen  # Container name added here
+          image: quay.io/phagen/traderx/loadgen-service:0.1
           imagePullPolicy: Always
-          name:  loadgen
+          resources:
+            requests:
+              memory: "75Mi"
+              cpu: "100m"
+            limits:
+              memory: "100Mi"
+              cpu: "200m"
       restartPolicy: Always
