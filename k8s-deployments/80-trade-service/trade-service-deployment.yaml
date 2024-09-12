@@ -44,6 +44,13 @@ spec:
             - mountPath: /workspace
               name: trade-service-cm
           workingDir: /trade-service
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "125m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
       restartPolicy: Always
       volumes:
         - configMap:

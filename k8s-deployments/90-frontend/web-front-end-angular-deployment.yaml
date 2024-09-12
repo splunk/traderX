@@ -34,6 +34,13 @@ spec:
             - mountPath: /workspace
               name: web-front-end-angular-cm
           workingDir: /web-front-end/angular
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "125m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
       restartPolicy: Always
       volumes:
         - configMap:

@@ -35,6 +35,13 @@ spec:
             - mountPath: /workspace
               name: people-service-cm
           workingDir: /people-service
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "125m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
       restartPolicy: Always
       volumes:
         - configMap:

@@ -38,7 +38,14 @@ spec:
             - mountPath: /workspace
               name: position-service-cm
           workingDir: /position-service
-      restartPolicy: Always
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "125m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
+      restartPolicy: Always 
       volumes:
         - configMap:
             name: position-service-cm

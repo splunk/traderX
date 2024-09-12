@@ -34,6 +34,13 @@ spec:
             - mountPath: /workspace
               name: reference-data-cm
           workingDir: /reference-data
+          resources:
+            requests:
+              memory: "100Mi"
+              cpu: "125m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
       restartPolicy: Always
       volumes:
         - configMap:
