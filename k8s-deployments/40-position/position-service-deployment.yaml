@@ -40,10 +40,10 @@ spec:
           workingDir: /position-service
           resources:
             requests:
-              memory: "256Mi"
+              memory: "600Mi"
               cpu: "125m"
             limits:
-              memory: "512Mi"
+              memory: "768Mi"
               cpu: "250m"
       restartPolicy: Always 
       volumes:
