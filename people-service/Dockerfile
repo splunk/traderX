@@ -1,28 +1,32 @@
-# Use the .NET 8.0 SDK as the base image to build the application
-# [Choice] .NET version: 8.0 /8.0-bookworm, 8.0-jammy, 7.0 /7.0-bookworm, 7.0-bullseye, 7.0-jammy, 6.0 /6.0-bookworm, 6.0-bullseye, 6.0-jammy, 6.0-focal
+# Use the official .NET SDK image to build the app
+# ARG allows you to change the .NET version as needed
 ARG VARIANT="8.0"
-FROM mcr.microsoft.com/dotnet/sdk:${VARIANT} AS build
+FROM mcr.microsoft.com/vscode/devcontainers/dotnet:${VARIANT} AS build-env
 
 # Set the working directory inside the container
-WORKDIR /src
-
-# Copy the project files to the container
-COPY . .
-
-# Build and publish the application in release mode
-RUN dotnet publish PeopleService.WebApi/PeopleService.WebApi.csproj -c Release -o /app/publish
-
-# Use a smaller runtime image for running the application
-FROM mcr.microsoft.com/dotnet/aspnet:${VARIANT}-alpine AS runtime
-
-# Set the working directory inside the container for the runtime
 WORKDIR /app
 
-# Copy the built application from the build stage to the runtime stage
-COPY --from=build /app/publish .
+# Copy the project files into the container
+COPY . . 
 
-# Expose the required port
+# Restore the dependencies (equivalent to running 'dotnet restore')
+RUN dotnet restore
+
+# Build and publish the app in release mode to the /out directory
+RUN dotnet publish -c Release -o /out
+
+# Use the runtime image for .NET (lighter than the SDK image)
+FROM mcr.microsoft.com/dotnet/aspnet:${VARIANT}-alpine AS runtime
+
+# Set the working directory for the final runtime image
+WORKDIR /app
+
+# Copy the precompiled output from the build stage
+COPY --from=build-env /out .
+
+# Expose the necessary port
 EXPOSE 18089
 
-# Set the entry point for the container to run the .NET app
+# Set the entry point to run the precompiled app
 ENTRYPOINT ["dotnet", "PeopleService.WebApi.dll"]
+#ENTRYPOINT ["tail", "-f", "/dev/null"]
