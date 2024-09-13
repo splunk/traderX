@@ -16,7 +16,8 @@ http {
 
     log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
                       '$status $body_bytes_sent "$http_referer" '
-                      '"$http_user_agent" "$http_x_forwarded_for"';
+                      '"$http_user_agent" "$http_x_forwarded_for"'
+                      '"trace_id:$otel_trace_id span_id:$otel_span_id"';
 
     access_log  /var/log/nginx/access.log  main;
 
@@ -28,8 +29,9 @@ http {
     #gzip  on;
     otel_service_name nginx;
     otel_exporter {
-        endpoint splunk-otel-collector-agent:4317;
+        #endpoint splunk-otel-collector-agent:4317;
         #endpoint 198.19.249.134:4317;
+        endpoint ip-10-0-136-165.eu-west-1.compute.internal:4317;
     }
 
     include /etc/nginx/conf.d/*.conf;
