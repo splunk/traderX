@@ -16,8 +16,7 @@ spec:
         io.kompose.service: ingress
     spec:
       containers:
-        - image:  quay.io/phagen/traderx/ingress-service:0.2.1
-          imagePullPolicy: Always
+        - image:  quay.io/phagen/traderx/ingress-service:0.2.2          imagePullPolicy: Always
           name: ingress
           ports:
             - containerPort: 8080
@@ -25,9 +24,9 @@ spec:
           workingDir: /ingress
           resources:
             requests:
-          #    memory: "100Mi"
-          #    cpu: "125m"
+              memory: "100Mi"
+              cpu: "125m"
             limits:
-           #   memory: "256Mi"
-           #   cpu: "250m"
+              memory: "256Mi"
+              cpu: "250m"
       restartPolicy: Always
