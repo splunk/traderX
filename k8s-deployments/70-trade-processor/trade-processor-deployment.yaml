@@ -28,7 +28,7 @@ spec:
               value: database
             - name: TRADE_FEED_HOST
               value: trade-feed   
-          image: quay.io/phagen/traderx/trade-processor:0.1 
+          image: quay.io/phagen/traderx/trade-processor:0.1.1 
           imagePullPolicy: Always
           name: trade-processor
           ports:

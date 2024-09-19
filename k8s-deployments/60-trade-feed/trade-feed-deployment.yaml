@@ -15,18 +15,35 @@ spec:
   template:
     metadata:
       annotations:
-        instrumentation.opentelemetry.io/inject-nodejs: "default/splunk-otel-collector"
+        #instrumentation.opentelemetry.io/inject-nodejs: "default/splunk-otel-collector"
       labels:
         io.kompose.service: trade-feed
     spec:
       containers:
-        - args:
-            - npm
-            - run
-            - start
-          image: quay.io/phagen/traderx/trade-feed:0.1
+        - name: trade-feed
+          image: quay.io/phagen/traderx/trade-feed:0.1.1
           imagePullPolicy: Always
-          name: trade-feed
+          env:
+            - name: SPLUNK_OTEL_AGENT
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.hostIP
+            - name: OTEL_EXPORTER_OTLP_ENDPOINT
+              value: "http://$(SPLUNK_OTEL_AGENT):4317"
+            - name: OTEL_SERVICE_NAME
+              value: "trade-feed"
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.version=0.1.1"
+            - name: SPLUNK_PROFILER_ENABLED
+              value: "true"
+            - name: SPLUNK_PROFILER_MEMORY_ENABLED
+              value: "true"
+            - name: SPLUNK_METRICS_ENABLED
+              value: "true"
+          command:
+            - node
+            - -r @splunk/otel/instrument
+            - index.js
           ports:
             - containerPort: 18086
               protocol: TCP
