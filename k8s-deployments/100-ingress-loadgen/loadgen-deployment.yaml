@@ -76,449 +76,105 @@ metadata:
   name: scriptfile
 data:
   local-file: |
-     const { Console } = require('console');
-     const puppeteer = require('puppeteer'); // v22.0.0 or later
-     (async () => {
-        const browser = await puppeteer.launch();
-        const page = await browser.newPage();
-        const timeout = 5000;
-        page.setDefaultTimeout(timeout);
+    const { Console } = require('console');
+    const puppeteer = require('puppeteer'); // v22.0.0 or later
+    function run () {
+          return new Promise(async (resolve, reject) => {
+              const browser = await puppeteer.launch({
+                  headless: 'new',
+                  defaultViewport: null,
+                  args: ['--no-sandbox', '--disable-setuid-sandbox']
+              });
+              try 
+              { 
+                const wait_time = 10000;  //Set up delay between page interactions
+                for (let loop=0; loop < 1;loop++) 
+                {  // as part of the load we run multiple of this script to generate multiple session
+                  const context = await browser.createBrowserContext();
+                  const page = await context.newPage();
+                  await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64; Splunk RUMLoadGen) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36')
+                  const urls= ["http://"+ process.env.NODE_IP]; //Setting up and array for urls
+                  const timeout = 30000; 
+                  for (const element of urls) 
+                  {   // read from array of url's
+                    const url = element;
+                    await targetPage.goto(`${url}/trade`);
+                    {
+                      const targetPage = page;
+                      await puppeteer.Locator.race([
+                          targetPage.locator('::-p-aria(Big Corporate Fund )'),
+                          targetPage.locator('#drpbtn0'),
+                          targetPage.locator('::-p-xpath(//*[@id=\\"drpbtn0\\"])'),
+                          targetPage.locator(':scope >>> #drpbtn0'),
+                          targetPage.locator('::-p-text(Big Corporate)')
+                      ])
+                          .setTimeout(timeout)
+                          .click({
+                            offset: {
+                              x: 136,
+                              y: 11.953125,
+                          },
+                       });
+                      const textContent = await page.evaluate(() => document.querySelector("#drpbtn0").textContent);
+                      console.log('{"severity":"info","msg":"Account Selected = "' + textContent + '"}');
+                    }
+                    { //switch account
+                      const targetPage = page;
+                      await puppeteer.Locator.race([
+                          targetPage.locator('::-p-aria(Internal Trading Book) >>>> ::-p-aria([role=\\"generic\\"])'),
+                          targetPage.locator('app-trade li:nth-of-type(1) > a'),
+                          targetPage.locator('::-p-xpath(//*[@id=\\"drp0\\"]/li[1]/a)'),
+                          targetPage.locator(':scope >>> app-trade li:nth-of-type(1) > a'),
+                          targetPage.locator('::-p-text(Internal Trading)')
+                      ])
+                          .setTimeout(timeout)
+                          .click({
+                            offset: {
+                              x: 101,
+                              y: 19.953125,
+                            },
+                          });
+                      const textContent = await page.evaluate(() => document.querySelector("#drpbtn0").textContent);
+                      console.log('{"severity":"info","msg":"Account switched to = "' + textContent + '"}');
+                    }
+                    {
+                      const targetPage = page;
+                      await puppeteer.Locator.race([
+                          targetPage.locator('::-p-aria(Create Trade Ticket)'),
+                          targetPage.locator('#createTicketBtn'),
+                          targetPage.locator('::-p-xpath(//*[@id=\\"createTicketBtn\\"])'),
+                          targetPage.locator(':scope >>> #createTicketBtn'),
+                          targetPage.locator('::-p-text(Create Trade)')
+                      ])
+                          .setTimeout(timeout)
+                          .click({
+                            offset: {
+                              x: 71.125,
+                              y: 12.953125,
+                            },
+                          });
+                        const textContent = await page.evaluate(() => document.querySelector("#drpbtn0").textContent);
+                        console.log('{"severity":"info","msg":"Account switched to = "' + textContent + '"}');
+                      }
+                      /* 
+                       insert into here 
+                      */
+                 }
+                  await delay(wait_time );
+                  await browser.close();
+                }
+                process.exit();
+          } catch (e) {
+            console.log ('{"severity":"error","msg": "'+ e + '"}');
+          } finally {
+            await browser.close();
+          }
+        })
+    }
+    run().then(console.log).catch(console.error);
 
-        {
-            const targetPage = page;
-            await targetPage.setViewport({
-                width: 1019,
-                height: 1234
-            })
-        }
-        {
-            const targetPage = page;
-            const promises = [];
-            const startWaitingForEvents = () => {
-                promises.push(targetPage.waitForNavigation());
-            }
-            startWaitingForEvents();
-            await targetPage.goto('http://trading-platform-eu.splunko11y.com/trade');
-            await Promise.all(promises);
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Big Corporate Fund )'),
-                targetPage.locator('#drpbtn0'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"drpbtn0\\"])'),
-                targetPage.locator(':scope >>> #drpbtn0'),
-                targetPage.locator('::-p-text(Big Corporate)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 136,
-                    y: 11.953125,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Internal Trading Book) >>>> ::-p-aria([role=\\"generic\\"])'),
-                targetPage.locator('app-trade li:nth-of-type(1) > a'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"drp0\\"]/li[1]/a)'),
-                targetPage.locator(':scope >>> app-trade li:nth-of-type(1) > a'),
-                targetPage.locator('::-p-text(Internal Trading)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 101,
-                    y: 19.953125,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Create Trade Ticket)'),
-                targetPage.locator('#createTicketBtn'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"createTicketBtn\\"])'),
-                targetPage.locator(':scope >>> #createTicketBtn'),
-                targetPage.locator('::-p-text(Create Trade)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 71.125,
-                    y: 12.953125,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Search security)'),
-                targetPage.locator('#stock-input'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"stock-input\\"])'),
-                targetPage.locator(':scope >>> #stock-input')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 37.515625,
-                    y: 22,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Search security)'),
-                targetPage.locator('#stock-input'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"stock-input\\"])'),
-                targetPage.locator(':scope >>> #stock-input')
-            ])
-                .setTimeout(timeout)
-                .fill('cisco');
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Cisco) >>>> ::-p-aria([role=\\"strong\\"])'),
-                targetPage.locator('strong'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"ngb-typeahead-0-0\\"]/span/strong)'),
-                targetPage.locator(':scope >>> strong'),
-                targetPage.locator('::-p-text(Cisco)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 20.5,
-                    y: 8,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('modal-container div:nth-of-type(4)'),
-                targetPage.locator('::-p-xpath(/html/body/modal-container/div[2]/div/app-trade-ticket/div/div[4])'),
-                targetPage.locator(':scope >>> modal-container div:nth-of-type(4)'),
-                targetPage.locator('::-p-text(Quantity0)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 75.5,
-                    y: 18,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 41.515625,
-                    y: 20,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 22.515625,
-                    y: 17,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('label.btn-info'),
-                targetPage.locator('::-p-xpath(/html/body/modal-container/div[2]/div/app-trade-ticket/div/div[3]/div/div/label[1])'),
-                targetPage.locator(':scope >>> label.btn-info')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 24.515625,
-                    y: 8,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await targetPage.keyboard.down('Backspace');
-        }
-        {
-            const targetPage = page;
-            await targetPage.keyboard.up('Backspace');
-        }
-        {
-            const targetPage = page;
-            await targetPage.keyboard.down('1');
-        }
-        {
-            const targetPage = page;
-            await targetPage.keyboard.up('1');
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('modal-container div:nth-of-type(4)'),
-                targetPage.locator('::-p-xpath(/html/body/modal-container/div[2]/div/app-trade-ticket/div/div[4])'),
-                targetPage.locator(':scope >>> modal-container div:nth-of-type(4)'),
-                targetPage.locator('::-p-text(Quantity0)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  delay: 540.4000000953674,
-                  offset: {
-                    x: 93.5,
-                    y: 17,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .fill('-1');
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 178.515625,
-                    y: 25,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .fill('0');
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 178.515625,
-                    y: 14,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .fill('1');
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria([role=\\"document\\"]) >>>> ::-p-aria([role=\\"spinbutton\\"])'),
-                targetPage.locator('#quantityField'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"quantityField\\"])'),
-                targetPage.locator(':scope >>> #quantityField')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 178.515625,
-                    y: 14,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Create)'),
-                targetPage.locator('#createButton'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"createButton\\"])'),
-                targetPage.locator(':scope >>> #createButton')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 56.5,
-                    y: 15,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Account)'),
-                targetPage.locator('app-header li:nth-of-type(2) > a'),
-                targetPage.locator('::-p-xpath(/html/body/app-root/app-header/ul/li[2]/a)'),
-                targetPage.locator(':scope >>> app-header li:nth-of-type(2) > a')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 44.703125,
-                    y: 19.953125,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(10031 Internal Trading Book Update) >>>> ::-p-aria([role=\\"button\\"])'),
-                targetPage.locator('div.ag-row-first button'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"accountgrid\\"]/div[3]/div[1]/div[2]/div[3]/div[1]/div[2]/div/div[1]/div[3]/app-btn-cell-renderer/button)'),
-                targetPage.locator(':scope >>> div.ag-row-first button')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 43,
-                    y: 13.953125,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Add User to Account)'),
-                targetPage.locator('#account-user'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"account-user\\"])'),
-                targetPage.locator(':scope >>> #account-user')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 234,
-                    y: 18.765625,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Add User to Account)'),
-                targetPage.locator('#account-user'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"account-user\\"])'),
-                targetPage.locator(':scope >>> #account-user')
-            ])
-                .setTimeout(timeout)
-                .fill('user02');
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Bob Smith) >>>> ::-p-aria([role=\\"generic\\"])'),
-                targetPage.locator('#ngb-typeahead-1 span'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"ngb-typeahead-1-0\\"]/span)'),
-                targetPage.locator(':scope >>> #ngb-typeahead-1 span'),
-                targetPage.locator('::-p-text(Bob Smith)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 32,
-                    y: 6,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Select an account )'),
-                targetPage.locator('#drpbtn1'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"drpbtn1\\"])'),
-                targetPage.locator(':scope >>> #drpbtn1'),
-                targetPage.locator('::-p-text(Select an account)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 138,
-                    y: 15.765625,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Internal Trading Book[role=\\"menuitem\\"]) >>>> ::-p-aria([role=\\"generic\\"])'),
-                targetPage.locator('app-account li:nth-of-type(1) > a'),
-                targetPage.locator('::-p-xpath(//*[@id=\\"drp1\\"]/li[1]/a)'),
-                targetPage.locator(':scope >>> app-account li:nth-of-type(1) > a')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 120,
-                    y: 11.765625,
-                  },
-                });
-        }
-        {
-            const targetPage = page;
-            await puppeteer.Locator.race([
-                targetPage.locator('::-p-aria(Add User)'),
-                targetPage.locator('div.mt-4 form > button.btn-primary'),
-                targetPage.locator('::-p-xpath(/html/body/app-root/app-account/div/div[2]/app-assign-user/form/button[1])'),
-                targetPage.locator(':scope >>> div.mt-4 form > button.btn-primary'),
-                targetPage.locator('::-p-text(Add User)')
-            ])
-                .setTimeout(timeout)
-                .click({
-                  offset: {
-                    x: 37.125,
-                    y: 23.765625,
-                  },
-                });
-        }
-
-        await browser.close();
-
-      })().catch(err => {
-          console.error(err);
-          process.exit(1);
+    function delay(time) {
+      return new Promise(function(resolve) {
+          setTimeout(resolve, time)
       });
+    }
