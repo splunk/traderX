@@ -30,18 +30,18 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: traderX-loadgen-deployment
+  name: traderx-loadgen-deployment
   labels:
-    app: traderX-loadgen
+    app: traderx-loadgen
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: traderX-loadgen
+      app: traderx-loadgen
   template:
     metadata:
       labels:
-        app: traderX-loadgen
+        app: traderx-loadgen
     spec:
       # If you are NOT running this from AWS, but from multipass for example set the below env variable
       # set RUM_FRONTEND_IP to the IP address where you can reach your local Online Boutique
@@ -49,7 +49,7 @@ spec:
       #  - name: RUM_FRONTEND_IP
       #    value: "192.168.1.99"
       containers:
-        - name: traderX-loadgen
+        - name: traderx-loadgen
           image: rcastley895/rumloadgen:5.5
           imagePullPolicy: Always
           env:
