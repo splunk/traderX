@@ -54,13 +54,14 @@ spec:
           imagePullPolicy: Always
           env:
             - name: NODE_IP
-              valueFrom:
-                fieldRef:
-                  fieldPath: status.hostIP
+              value: 198.19.249.89
+              # valueFrom:
+              #  fieldRef:
+              #    fieldPath: status.hostIP
             - name: RUM_PROTOCOL
               value: "http"
             - name: RUM_PORT
-              value: "80"
+              value: "8080"
           volumeMounts:
             - name: puppeteer
               subPath: local-file
