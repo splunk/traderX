@@ -77,68 +77,71 @@ metadata:
   name: scriptfile
 data:
   local-file: |
-    const { Console } = require('console');
-    const puppeteer = require('puppeteer');
-    
-    async function run() {
-        const browser = await puppeteer.launch({
-            headless: 'new',
-            defaultViewport: null,
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
-    
-        try {
-            const wait_time = 10000;
-            const url = `http://${process.env.NODE_IP}:${process.env.RUM_PORT}`;
-            const timeout = 30000;
-    
-            for (let i = 0; i < 10; i++) {  // Loop 10 times
-                const context = await browser.createIncognitoBrowserContext();
-                const page = await context.newPage();
-    
-                await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64; Splunk TradeLoadGen)');
-                await page.goto(`${url}/trade`, { timeout });
-                console.log(`Page loaded: ${url}/trade`);
-    
-                // Verifying the element exists before performing any action
-                const elementExists = await page.evaluate(() => !!document.querySelector("#drpbtn0"));
-                if (elementExists) {
-                    console.log('Element #drpbtn0 exists, proceeding to click.');
-                    
-                    await page.click('#drpbtn0');
-                    const textContent = await page.evaluate(() => document.querySelector("#drpbtn0").textContent);
-                    console.log(`Account Selected = ${textContent}`);
-                } else {
-                    console.log('Element #drpbtn0 not found!');
-                }
-    
-                // Continue with the remaining steps and logging
-                console.log('Navigating to Internal Trading Book...');
-                await page.waitForSelector('app-trade li:nth-of-type(1) > a', { timeout });
-                await page.click('app-trade li:nth-of-type(1) > a');
-    
-                console.log('Creating trade ticket...');
-                await page.waitForSelector('#createTicketBtn', { timeout });
-                await page.click('#createTicketBtn');
-    
-                console.log('Filling search input...');
-                await page.waitForSelector('#stock-input', { timeout });
-                await page.click('#stock-input');
-                await page.type('#stock-input', 'cisco');
-                
-                console.log(`Completed iteration ${i + 1}`);
-                await delay(5000); // Delay for 5 seconds
-            }
-    
-        } catch (e) {
-            console.error(`Error: ${e}`);
-        } finally {
-            await browser.close();
-        }
-    }
-    
-    run().catch(console.error);
-    
-    function delay(time) {
-        return new Promise(resolve => setTimeout(resolve, time));
-    }
+      const { Console } = require('console');
+      const puppeteer = require('puppeteer');
+
+      async function run() {
+          const browser = await puppeteer.launch({
+              headless: 'new',
+              defaultViewport: null,
+              args: ['--no-sandbox', '--disable-setuid-sandbox']
+          });
+
+          try {
+              const wait_time = 10000;
+              const url = `http://${process.env.NODE_IP}:${process.env.RUM_PORT}`;
+              const timeout = 30000;
+
+              for (let i = 0; i < 10; i++) {  // Loop 10 times
+                  const context = await browser.createIncognitoBrowserContext(); // Corrected usage here
+                  const page = await context.newPage(); // New page in incognito context
+
+                  await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64; Splunk TradeLoadGen)');
+                  await page.goto(`${url}/trade`, { timeout });
+                  console.log(`Page loaded: ${url}/trade`);
+
+                  // Verifying the element exists before performing any action
+                  const elementExists = await page.evaluate(() => !!document.querySelector("#drpbtn0"));
+                  if (elementExists) {
+                      console.log('Element #drpbtn0 exists, proceeding to click.');
+                      
+                      await page.click('#drpbtn0');
+                      const textContent = await page.evaluate(() => document.querySelector("#drpbtn0").textContent);
+                      console.log(`Account Selected = ${textContent}`);
+                  } else {
+                      console.log('Element #drpbtn0 not found!');
+                  }
+
+                  // Continue with the remaining steps and logging
+                  console.log('Navigating to Internal Trading Book...');
+                  await page.waitForSelector('app-trade li:nth-of-type(1) > a', { timeout });
+                  await page.click('app-trade li:nth-of-type(1) > a');
+
+                  console.log('Creating trade ticket...');
+                  await page.waitForSelector('#createTicketBtn', { timeout });
+                  await page.click('#createTicketBtn');
+
+                  console.log('Filling search input...');
+                  await page.waitForSelector('#stock-input', { timeout });
+                  await page.click('#stock-input');
+                  await page.type('#stock-input', 'cisco');
+                  
+                  console.log(`Completed iteration ${i + 1}`);
+                  await delay(5000); // Delay for 5 seconds
+
+                  // Close the incognito context after each iteration
+                  await context.close();
+              }
+
+          } catch (e) {
+              console.error(`Error: ${e}`);
+          } finally {
+              await browser.close();
+          }
+      }
+
+      run().catch(console.error);
+
+      function delay(time) {
+          return new Promise(resolve => setTimeout(resolve, time));
+      }
