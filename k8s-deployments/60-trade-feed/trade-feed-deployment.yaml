@@ -41,9 +41,9 @@ spec:
             - name: SPLUNK_METRICS_ENABLED
               value: "true"
           command:
-            - node
-            - -r @splunk/otel/instrument
-            - index.js
+            #- node
+            #- -r @splunk/otel/instrument
+            #- index.js
           ports:
             - containerPort: 18086
               protocol: TCP
