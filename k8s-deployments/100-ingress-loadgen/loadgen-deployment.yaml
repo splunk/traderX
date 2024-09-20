@@ -94,7 +94,7 @@ data:
                   const context = await browser.createBrowserContext();
                   const page = await context.newPage();
                   await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64; Splunk RUMLoadGen) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36')
-                  const urls= ["http://"+ process.env.NODE_IP + ":" + process.env.RUM_PORT"]; //Setting up and array for urls
+                  const urls= ["http://"+ process.env.NODE_IP + ":" + process.env.RUM_PORT]; //Setting up and array for urls
                   const timeout = 30000; 
                   for (const element of urls) 
                   {   // read from array of url's
