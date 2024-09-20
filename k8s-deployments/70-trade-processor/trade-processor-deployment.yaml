@@ -27,8 +27,10 @@ spec:
             - name: DATABASE_TCP_HOST
               value: database
             - name: TRADE_FEED_HOST
-              value: trade-feed   
-          image: quay.io/phagen/traderx/trade-processor:0.1.1 
+              value: trade-feed
+            - name: OTEL_RESOURCE_ATTRIBUTES
+              value: "service.version=0.1.3"     
+          image: quay.io/phagen/traderx/trade-processor:0.1.3
           imagePullPolicy: Always
           name: trade-processor
           ports:

@@ -2,7 +2,7 @@ package finos.traderx.tradeprocessor;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.trace.Span;
-//mport io.opentelemetry.api.trace.Span.Kind;
+import io.opentelemetry.api.trace.SpanKind;
 import io.opentelemetry.api.trace.SpanBuilder;
 import io.opentelemetry.api.trace.Tracer;
 import io.opentelemetry.context.Context;
@@ -16,6 +16,7 @@ import finos.traderx.messaging.socketio.SocketIOJSONSubscriber;
 import finos.traderx.tradeprocessor.model.TradeOrder;
 import finos.traderx.tradeprocessor.service.TradeService;
 
+import java.util.Date;  // Importing java.util.Date for working with date objects
 import java.util.HashMap;
 import java.util.Map;
 
@@ -57,9 +58,28 @@ public class TradeFeedHandler extends SocketIOJSONSubscriber<TradeOrder> {
                     });
 
                 // Create a child span using the extracted context
+                // Extract necessary fields from the envelope
+                String topic = envelope.getTopic();
+                String messageType = envelope.getType();
+                String from = envelope.getFrom();
+                Date date = envelope.getDate();
+
+                // Create a child span using the extracted context
                 SpanBuilder spanBuilder = tracer.spanBuilder("process-trade")
-                                                .setParent(extractedContext);
-                                               // .setSpanKind(Span.Kind.CONSUMER);
+                                .setParent(extractedContext)
+                                .setSpanKind(SpanKind.CONSUMER) // This is a message consumption span
+
+                                // Set messaging attributes from the envelope
+                                .setAttribute("messaging.system", "socket.io") // The messaging system is socket.io
+                                .setAttribute("messaging.destination", topic) // The topic (namespace or room in socket.io)
+                                .setAttribute("messaging.destination_kind", "topic") // It's a topic-based messaging system
+                                .setAttribute("messaging.operation", "process") // The operation being performed is processing
+                                .setAttribute("messaging.protocol", "socket.io") // The protocol in use is socket.io
+                                .setAttribute("messaging.message_id", traceparent) // Use the traceparent as the message ID
+                                .setAttribute("messaging.message_type", messageType) // The type of message (e.g., "TradeOrder")
+                                .setAttribute("messaging.conversation_id", from) // Optional: Use the "from" field as conversation ID if applicable
+                                .setAttribute("messaging.message_date", date.toString()); // Capture the message date for context
+
                 Span span = spanBuilder.startSpan();
                 try {
                     log.info("Started child span with traceparent: {}", traceparent);

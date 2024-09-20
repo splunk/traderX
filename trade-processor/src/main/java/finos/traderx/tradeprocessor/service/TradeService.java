@@ -16,6 +16,9 @@ import finos.traderx.messaging.Publisher;
 import finos.traderx.tradeprocessor.model.*;
 import finos.traderx.tradeprocessor.repository.*;
 
+
+import io.opentelemetry.extension.annotations.WithSpan; // Import @WithSpan
+
 @Service
 public class TradeService {
 	Logger log= LoggerFactory.getLogger(TradeService.class);
@@ -32,6 +35,7 @@ public class TradeService {
     @Autowired
     private Publisher<Position> positionPublisher;
     
+	@WithSpan
 	public TradeBookingResult processTrade(TradeOrder order) {
 		log.info("Trade order received : "+order);
         Trade t=new Trade();
