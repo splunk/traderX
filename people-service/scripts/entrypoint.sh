@@ -1,5 +1,7 @@
 #!/bin/sh
-#set -x
+set -x
+
+cd /
 # Read in the file of environment settings
 . /$HOME/.splunk-otel-dotnet/instrument.sh
 
