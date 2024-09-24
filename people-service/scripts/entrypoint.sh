@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -x
 
 cd /
@@ -7,4 +7,5 @@ cd /
 
 # Then run the CMD
 cd /app
-dotnet PeopleService.WebApi.dll
+export ASPNETCORE_URLS="http://0.0.0.0:18089"
+dotnet PeopleService.WebApi.dll 
