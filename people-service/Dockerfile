@@ -48,4 +48,4 @@ COPY  ./scripts/entrypoint.sh .
 ENTRYPOINT ["sh", "./entrypoint.sh"]
 #CMD ["dotnet", "PeopleService.WebApi.dll"]
 #CMD ["cd", "PeopleService.WebApi", "&&", "dotnet", "run"]
-#ENTRYPOINT [ "tail", "-f", "/dev/null" ]
+#ENTRYPOINT [ "tail", "-f", "/dev/null" ] 
