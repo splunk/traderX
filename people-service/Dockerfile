@@ -2,7 +2,7 @@
 
 # [Choice] .NET version: 8.0 /8.0-bookworm, 8.0-jammy, 7.0 /7.0-bookworm, 7.0-bullseye, 7.0-jammy, 6.0 /6.0-bookworm, 6.0-bullseye, 6.0-jammy, 6.0-focal
 #ARG VARIANT="0.4.4" 
-FROM --platform=$BUILDPLATFORM  mcr.microsoft.com/devcontainers/dotnet:8.0 AS build
+FROM  mcr.microsoft.com/devcontainers/dotnet:8.0 AS build
 
 ARG TARGETARCH
 # Use the official .NET 8.0 SDK image for building the application
