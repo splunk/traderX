@@ -46,10 +46,7 @@ RUN if [ "${NODE_VERSION}" != "none" ]; then su vscode -c "umask 0002 && . /usr/
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
 
 WORKDIR /
-WORKDIR /
 COPY  ./scripts/entrypoint.sh .
 RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["sh", "/entrypoint.sh"]
-#CMD ["dotnet", "PeopleService.WebApi.dll"]
-#CMD ["cd", "PeopleService.WebApi", "&&", "dotnet", "run"]
 #ENTRYPOINT [ "tail", "-f", "/dev/null" ]

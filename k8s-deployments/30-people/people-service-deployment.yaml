@@ -21,18 +21,34 @@ spec:
         io.kompose.service: people-service
     spec:
       containers:
-        - image: quay.io/phagen/traderx/people-service:0.1.4
+        #for now enable the right platform  as required 
+        - image: quay.io/phagen/traderx/people-service:0.1.5amd 
+        #- image: quay.io/phagen/traderx/people-service:0.1.5arm
           imagePullPolicy: Always
           name: people-service
           env:
+          - name: NODE_IP
+            valueFrom:
+              fieldRef:
+                fieldPath: status.hostIP
+          - name: OTEL_DOTNET_AUTO_TRACES_CONSOLE_EXPORTER_ENABLED
+            value: "false"
+          - name: OTEL_DOTNET_AUTO_LOGS_ENABLED
+            value: "true"
+          - name: OTEL_DOTNET_AUTO_METRICS_CONSOLE_EXPORTER_ENABLED
+            value: "false"  
           - name: OTEL_LOG_LEVEL
             value: "debug"
+          - name:  CORECLR_ENABLE_PROFILING
+            value: "1" 
           - name: OTEL_SERVICE_NAME
             value: people-service
           - name: OTEL_EXPORTER_OTLP_ENDPOINT
-            value: "splunk-otel-collector-agent:4317"            
+            value: "http://$(NODE_IP):4318"
           - name: OTEL_RESOURCE_ATTRIBUTES
-            value: "deployment.environment=xtrader-workshop,service.version=0.1.4"
+            value: "service.version=0.1.5"
+          - name: SPLUNK_ENV_NAME  
+            value: "xtrader-workshop"  
           ports:
             - containerPort: 18089
               protocol: TCP
@@ -45,3 +61,4 @@ spec:
         - configMap:
             name: people-service-cm
           name: people-service-cm
+

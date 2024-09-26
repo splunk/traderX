@@ -91,18 +91,18 @@ data:
             const wait_time = 10000;
             const url = `http://${process.env.NODE_IP}:${process.env.RUM_PORT}`;
             const timeout = 30000;
-            
-            while (true) {  // Run indefinitely
+
+            while (true) {  // Run indefinitely, consider adding a stop condition
                 const page = await browser.newPage();
                 await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64; Splunk TradeLoadGen)');
                 await page.goto(`${url}/trade`, { timeout });
                 console.log(`Page loaded: ${url}/trade`);
 
                 // Verifying the element exists before performing any action
-                const elementExists = await page.evaluate(() => !!document.querySelector("#drpbtn0"));
+                let elementExists = await page.evaluate(() => !!document.querySelector("#drpbtn0"));
                 if (elementExists) {
                     console.log('Element #drpbtn0 exists, proceeding to click.');
-                    
+
                     await page.click('#drpbtn0');
                     const textContent = await page.evaluate(() => document.querySelector("#drpbtn0").textContent);
                     console.log(`Account Selected = ${textContent}`);
@@ -122,7 +122,7 @@ data:
                 await page.waitForSelector('#stock-input', { timeout });
                 await page.click('#stock-input');
                 await page.type('#stock-input', 'cisco');
-                
+
                 // More interactions with detailed logging
                 console.log('Clicking label btn-info...');
                 await page.waitForSelector('label.btn-info', { timeout });
@@ -137,8 +137,36 @@ data:
                 await page.click('#createButton');
 
                 console.log('Navigating to Account page...');
-                await page.waitForSelector('app-header li:nth-of-type(2) > a', { timeout });
-                await page.click('app-header li:nth-of-type(2) > a');
+                await page.goto(`${url}/account`, { timeout });
+
+                // Verifying the element exists before performing any action
+                elementExists = await page.evaluate(() => !!document.querySelector("#account-user"));
+                if (elementExists) {
+                    console.log('Element #account-user exists, proceeding to fill.');
+                    
+                    // Handling the account user input - sequentially filling 'admin', 'root', 'user01'
+                    console.log('Filling account user with "admin"...');
+                    await page.waitForSelector('#account-user', { timeout });
+                    await page.focus('#account-user');
+                    await page.keyboard.type('admin');
+                    await delay(5000); // Delay for 5 seconds
+
+                    console.log('Filling account user with "root"...');
+                    await page.evaluate(() => document.querySelector('#account-user').value = ''); // Clear the input field
+                    await page.focus('#account-user');
+                    await page.keyboard.type('root');
+                    await delay(5000); // Delay for 5 seconds
+
+                    console.log('Filling account user with "user01"...');
+                    await page.evaluate(() => document.querySelector('#account-user').value = ''); // Clear the input field
+                    await page.focus('#account-user');
+                    await page.keyboard.type('user01');
+                    await delay(5000); // Delay for 5 seconds
+
+                    await page.click('#new-account');
+                } else {
+                    console.log('Element #account-user not found!');
+                }
 
                 console.log(`Completed iteration`);
                 await delay(10000); // Delay for 10 seconds
@@ -146,7 +174,6 @@ data:
                 // Close the page after each iteration
                 await page.close();
             }
-
         } catch (e) {
             console.error(`Error: ${e}`);
         } finally {

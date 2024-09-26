@@ -2,10 +2,16 @@ using FluentValidation.AspNetCore;
 using Microsoft.OpenApi.Models;
 using PeopleService.Core.Infrastructure;
 using Serilog;
+using Serilog.Enrichers.Span;
+using Serilog.Formatting.Json;
+using System.IO;
 using System.Reflection;
 
-var builder = WebApplication.CreateBuilder(args);
 
+var builder = WebApplication.CreateBuilder(args);
+// Read service name from environment variables
+var serviceName = Environment.GetEnvironmentVariable("OTEL_SERVICE_NAME") ?? "people-service";
+var deploymentEnv = Environment.GetEnvironmentVariable("SPLUNK_ENV_NAME") ?? "unknown";
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -26,8 +32,13 @@ builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Host.UseSerilog((hostContext, services, configuration) =>
 {
-    configuration.WriteTo.Console();
-    configuration.WriteTo.RollingFile("Logs/PeopleService.log");
+    configuration
+        .MinimumLevel.Information()  // Set default severity level to Information
+        .Enrich.WithProperty("service.name", serviceName)  // Add service.name to all logs
+        .Enrich.WithProperty("deployment.environment",deploymentEnv )
+        .Enrich.WithSpan()  // Include TraceId and SpanId
+       .WriteTo.Console(new SplunkO11YLoCustomJsonFormatter());  // Use custom formatter to change Level to Severity and map level names
+
 });
 
 var app = builder.Build();
@@ -51,3 +62,4 @@ app.UseCors(builder => builder
     .AllowAnyHeader());
 
 app.Run();
+ 
