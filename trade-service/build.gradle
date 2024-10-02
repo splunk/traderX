@@ -21,6 +21,11 @@ java{
 configurations.all {
   exclude group: 'org.yaml', module: 'snakeyaml'
 }
+dependencyManagement {
+  imports {
+    mavenBom("io.opentelemetry:opentelemetry-bom:1.42.1")
+  }
+}
 
 dependencies {
 
@@ -28,6 +33,13 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'com.h2database:h2:2.2.224'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
+
+    implementation 'io.opentelemetry:opentelemetry-api'
+	implementation 'io.opentelemetry:opentelemetry-sdk'
+    implementation 'io.opentelemetry:opentelemetry-exporter-otlp'
+	implementation 'io.opentelemetry:opentelemetry-extension-trace-propagators'
+
+    implementation 'io.opentelemetry:opentelemetry-extension-annotations:1.18.0'
 
 	implementation('org.json:json:20240303') {
 		because 'previous versions are affected by multiple CVE'

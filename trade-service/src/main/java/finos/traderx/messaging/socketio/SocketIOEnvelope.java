@@ -10,14 +10,18 @@ public class SocketIOEnvelope<T> implements Envelope<T> {
     private Date date = new Date();
     private String from;
     private String type;
+    private String traceParent;   // OpenTelemetry Traceparent
 
-    public SocketIOEnvelope(){}
+
+    public SocketIOEnvelope() {}
+
     public SocketIOEnvelope(String topic, T payload) {
         this.payload = payload;
         this.topic = topic;
         this.type = payload.getClass().getSimpleName();
     }
 
+    // Setters
     public void setType(String type) {
         this.type = type;
     }
@@ -34,6 +38,11 @@ public class SocketIOEnvelope<T> implements Envelope<T> {
         this.from = from;
     }
 
+    public void setTraceParent(String traceParent) {
+        this.traceParent = traceParent;
+    }
+
+    // Getters
     public String getType() {
         return type;
     }
@@ -53,4 +62,9 @@ public class SocketIOEnvelope<T> implements Envelope<T> {
     public String getFrom() {
         return from;
     }
+
+    public String getTraceParent() {
+        return traceParent;
+    }
+
 }

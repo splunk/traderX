@@ -2,6 +2,7 @@ package finos.traderx.messaging.socketio;
 
 import java.net.URI;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -19,7 +20,7 @@ import io.socket.emitter.Emitter;
 
 /**
  * Simple socketIO Subscriber, which uses 3 commands - 'subscribe',
- * 'unsubscribe', and 'publish' followed by payload
+ * 'unsubscribe', and 'publish' followed by payload.
  * Publish events consist of an envelope and an internal payload.
  */
 public abstract class SocketIOJSONSubscriber<T> implements Subscriber<T>, InitializingBean {
@@ -27,7 +28,7 @@ public abstract class SocketIOJSONSubscriber<T> implements Subscriber<T>, Initia
             .setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
     public SocketIOJSONSubscriber(Class<T> typeClass) {
-        JavaType type = objectMapper.getTypeFactory().constructParametricType(SocketIOEnvelope.class, typeClass );
+        JavaType type = objectMapper.getTypeFactory().constructParametricType(SocketIOEnvelope.class, typeClass);
         this.envelopeType = type;
         this.objectType = typeClass;
     }
@@ -57,6 +58,7 @@ public abstract class SocketIOJSONSubscriber<T> implements Subscriber<T>, Initia
     }
 
     private String defaultTopic = "/default";
+
     public void setDefaultTopic(String topic) {
         defaultTopic = topic;
     }
@@ -71,7 +73,7 @@ public abstract class SocketIOJSONSubscriber<T> implements Subscriber<T>, Initia
 
     @Override
     public void unsubscribe(String topic) throws PubSubException {
-        socket.emit("unsubscribe", "topic");
+        socket.emit("unsubscribe", topic);
     }
 
     @Override
@@ -88,7 +90,7 @@ public abstract class SocketIOJSONSubscriber<T> implements Subscriber<T>, Initia
         try {
             socket = internalConnect(URI.create(socketAddress));
         } catch (Exception x) {
-            throw new PubSubException("Cannot socket connection at " + socketAddress, x);
+            throw new PubSubException("Cannot establish socket connection at " + socketAddress, x);
         }
     }
 
@@ -118,27 +120,42 @@ public abstract class SocketIOJSONSubscriber<T> implements Subscriber<T>, Initia
             }
         });
 
+        // Handle 'publish' events
         s.on("publish", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 try {
                     JSONObject json = (JSONObject) args[0]; 
                     log.info("Raw Payload " + args[0].toString());
-                    if(! objectType.getSimpleName().equals(json.get("type"))){
+
+                    // Check if the message type matches the expected objectType
+                    if (!objectType.getSimpleName().equals(json.get("type"))) {
                         log.info("System Message>>>>> " + args[0].toString());
                     } else {
-                        SocketIOEnvelope<T> envelope = (SocketIOEnvelope<T>) objectMapper.readValue(json.toString(),  envelopeType);
+                        // Parse the JSON object into a SocketIOEnvelope
+                        SocketIOEnvelope<T> envelope = objectMapper.readValue(json.toString(), envelopeType);
+
+                        // Extract the traceParent if it exists in the incoming JSON
+                        if (json.has("traceParent")) {
+                            String traceParent = json.getString("traceParent");
+                            log.info("Extracted traceParent: " + traceParent);
+
+                            // Set the traceParent in the envelope using the setter
+                            envelope.setTraceParent(traceParent);
+                            json.remove("traceParent"); // Remove traceParent field from the raw JSON
+                            log.info("traceParent removed from the raw message");
+                        }
+
                         log.info("Incoming Payload: " + envelope.getPayload());
                         SocketIOJSONSubscriber.this.onMessage(envelope, envelope.getPayload());
                     }
 
-                   
                 } catch (Exception x) {
                     log.error("Threw exception while handling incoming message", x);
                 }
-                log.info("Connection Error");
             }
         });
+
         s.connect();
         return s;
     }
@@ -147,5 +164,38 @@ public abstract class SocketIOJSONSubscriber<T> implements Subscriber<T>, Initia
     public void afterPropertiesSet() throws Exception {
         connect();
         subscribe(defaultTopic);
+    }
+
+    // Helper function to log a JSONObject and its structure recursively
+    private void logJSON(JSONObject json) {
+        for (String key : json.keySet()) {
+            Object value = json.get(key);
+
+            if (value instanceof JSONObject) {
+                log.info("Key: " + key + " (nested JSONObject):");
+                logJSON((JSONObject) value);  // Recursively log nested JSONObject
+            } else if (value instanceof JSONArray) {
+                log.info("Key: " + key + " (JSONArray):");
+                logJSONArray((JSONArray) value);  // Log JSONArray contents
+            } else {
+                log.info("Key: " + key + ", Value: " + value);
+            }
+        }
+    }
+
+    // Helper function to log a JSONArray and its structure
+    private void logJSONArray(JSONArray array) {
+        for (int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if (value instanceof JSONObject) {
+                log.info("Index [" + i + "] is a JSONObject:");
+                logJSON((JSONObject) value);  // Recursively log JSONObject in the array
+            } else if (value instanceof JSONArray) {
+                log.info("Index [" + i + "] is a JSONArray:");
+                logJSONArray((JSONArray) value);  // Recursively log JSONArray in the array
+            } else {
+                log.info("Index [" + i + "] Value: " + value);
+            }
+        }
     }
 }

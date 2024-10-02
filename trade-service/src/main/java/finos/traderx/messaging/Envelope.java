@@ -3,13 +3,16 @@ package finos.traderx.messaging;
 import java.util.Date;
 
 public interface Envelope<T> {
-    public String getType();
+    String getType();
 
-    public String getTopic();
+    String getTopic();
 
-    public T getPayload();
+    T getPayload();
 
-    public Date getDate();
+    Date getDate();
 
-    public String getFrom();
-}
+    String getFrom();
+
+    // OpenTelemetry tracing fields
+    String getTraceParent();  // Added for OpenTelemetry traceparent
+}    
