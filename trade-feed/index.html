@@ -39,7 +39,8 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         if (input.value) {
-          socket.emit(PUBLISH, { topic:'/chat',payload:{message:input.value}});
+          socket.emit(PUBLISH, { topic:'/chat',payload:{message:input.value}
+          });
           input.value = '';
         }
       });
