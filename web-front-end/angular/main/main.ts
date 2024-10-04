@@ -8,7 +8,7 @@ import { environment } from './environments/environment';
 
 SplunkRum.init({
     beaconEndpoint: 'https://ingest.eu0.signalfx.com/v1/traces',
-    rumAuth: 'DrdOUIwg3btOxzQCXSkPPQ',
+    rumAuth: 'xxxxxx',
     app: 'Splunk-trading-app',
     environment: 'traderx-workshop',
     globalAttributes: {
